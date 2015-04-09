@@ -49,6 +49,7 @@ it ('should 200 (grid) for existing project', function(done) {
         { status: 200 },
         function(res) {
             function grid(data) { return data; };
+            assert.equal(res.body.slice(0, 5), 'grid(');
             var data = eval(res.body);
             assert.equal(data.grid.length, 64);
             assert.equal(data.keys.length, 90);
@@ -59,5 +60,24 @@ it ('should 200 (grid) for existing project', function(done) {
         }
     );
 });
+
+it ('grid.json should support callback param', function(done) {
+    assert.response(tile,
+        { url: '/tile/demo_01/2/2/1.grid.json?callback=cbxxx' },
+        { status: 200 },
+        function(res) {
+            function cbxxx(data) { return data; };
+            assert.equal(res.body.slice(0, 6), 'cbxxx(');
+            var data = eval(res.body);
+            assert.equal(data.grid.length, 64);
+            assert.equal(data.keys.length, 90);
+            assert.equal(Object.keys(data.data).length, 89);
+            assert.equal(data.keys[1], '154');
+            assert.equal(data.data['154'].NAME, 'Norway');
+            done();
+        }
+    );
+});
+
 
 });

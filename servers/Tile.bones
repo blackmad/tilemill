@@ -130,7 +130,7 @@ server.prototype.load = function(req, res, next) {
             x = +req.params.x,
             y = +req.params.y;
 
-        req.query.callback = 'grid';
+        req.query.callback = req.param('callback') || 'grid';
         var fn = req.params.format === 'grid.json' ? 'getGrid' : 'getTile';
         source[fn](z, x, y, function(err, tile, headers) {
             if (err) return next(new Error.HTTP(err.message, 404));
@@ -153,7 +153,7 @@ server.prototype.mbtiles = function(req, res, next) {
         // The interface is still TMS.
         y = (1 << z) - 1 - y;
 
-        req.query.callback = 'grid';
+        req.query.callback = req.param('callback') || 'grid';
         var fn = req.params.format === 'grid.json' ? 'getGrid' : 'getTile';
         source[fn](z, x, y, function(err, tile, headers) {
             if (err) return next(new Error.HTTP(err.message, 404));
